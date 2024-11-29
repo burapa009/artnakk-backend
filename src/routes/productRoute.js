@@ -1,18 +1,27 @@
 import express from "express";
-import { listProducts, addProduct, removeProduct, singleProduct } from "../controllers/productController.js";
-import upload from "../middleware/multer.js";
-import adminAuth from "../middleware/adminAuth.js";
+import productModel from "../models/productModel.js";
 
-const productRouter = express.Router();
+const router = express.Router();
 
-productRouter.get("/list", listProducts);
-productRouter.post("/add", adminAuth, upload.fields([
-    { name: "image1", maxCount: 1 },
-    { name: "image2", maxCount: 1 },
-    { name: "image3", maxCount: 1 },
-    { name: "image4", maxCount: 1 }
-]), addProduct);
-productRouter.post("/remove", adminAuth, removeProduct);
-productRouter.post("/single", singleProduct);
+// Get all products
+router.get("/", async (req, res) => {
+    try {
+        const products = await productModel.find();
+        res.json(products);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
 
-export default productRouter; 
+// Add product
+router.post("/add", async (req, res) => {
+    try {
+        const product = new productModel(req.body);
+        await product.save();
+        res.status(201).json(product);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+export default router; 

@@ -1,11 +1,28 @@
 import express from "express";
-import { addToCart, updateCart, getUserCart } from "../controllers/cartController.js";
-import authUser from "../middleware/auth.js";
+import userModel from "../models/userModel.js";
 
-const cartRouter = express.Router();
+const router = express.Router();
 
-cartRouter.post("/add", authUser, addToCart);
-cartRouter.post("/update", authUser, updateCart);
-cartRouter.post("/get", authUser, getUserCart);
+// Get cart
+router.get("/:userId", async (req, res) => {
+    try {
+        const user = await userModel.findById(req.params.userId);
+        res.json(user.cartData);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
 
-export default cartRouter; 
+// Update cart
+router.put("/:userId", async (req, res) => {
+    try {
+        const user = await userModel.findById(req.params.userId);
+        user.cartData = req.body.cartData;
+        await user.save();
+        res.json(user.cartData);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+export default router; 

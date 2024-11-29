@@ -1,20 +1,27 @@
 import express from "express";
-import {
-  placeOrderStripe,
-  allOrders,
-  userOrders,
-  updateStatus,
-  verifyStripe,
-} from "../controllers/orderController.js";
-import adminAuth from "../middleware/adminAuth.js";
-import authUser from "../middleware/auth.js";
+import orderModel from "../models/orderModel.js";
 
-const orderRouter = express.Router();
+const router = express.Router();
 
-orderRouter.post("/list", adminAuth, allOrders);
-orderRouter.post("/status", adminAuth, updateStatus);
-orderRouter.post("/stripe", authUser, placeOrderStripe);
-orderRouter.post("/userorders", authUser, userOrders);
-orderRouter.post("/verifyStripe", authUser, verifyStripe);
+// Get orders
+router.get("/:userId", async (req, res) => {
+    try {
+        const orders = await orderModel.find({ userId: req.params.userId });
+        res.json(orders);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
 
-export default orderRouter; 
+// Create order
+router.post("/", async (req, res) => {
+    try {
+        const order = new orderModel(req.body);
+        await order.save();
+        res.status(201).json(order);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+export default router; 
