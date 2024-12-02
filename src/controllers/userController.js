@@ -2,7 +2,6 @@ import validator from "validator";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import userModel from "../models/userModel.js";
-import bcrypt from 'bcrypt';
 
 const createToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET);
@@ -72,37 +71,18 @@ const registerUser = async (req, res) => {
 const adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
-    
-    // เพิ่ม log เพื่อดีบัก
-    console.log("Admin login attempt:", {
-      receivedEmail: email,
-      receivedPassword: password,
-      expectedEmail: process.env.ADMIN_EMAIL,
-      expectedPassword: process.env.ADMIN_PASSWORD
-    });
-
     if (
       email === process.env.ADMIN_EMAIL &&
       password === process.env.ADMIN_PASSWORD
     ) {
       const token = jwt.sign(email + password, process.env.JWT_SECRET);
-      return res.status(200).json({ 
-        success: true, 
-        token,
-        message: "เข้าสู่ระบบสำเร็จ" 
-      });
+      res.json({ success: true, token });
     } else {
-      return res.status(401).json({ 
-        success: false, 
-        message: "อีเมลหรือรหัสผ่านไม่ถูกต้อง" 
-      });
+      res.json({ success: false, message: "Invalid credentials" });
     }
   } catch (error) {
-    console.error("Admin login error:", error);
-    return res.status(500).json({ 
-      success: false, 
-      message: "เกิดข้อผิดพลาดในการเข้าสู่ระบบ" 
-    });
+    console.log(error);
+    res.json({ success: false, message: error.message });
   }
 };
 export { loginUser, registerUser, adminLogin };

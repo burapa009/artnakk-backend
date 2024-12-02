@@ -20,9 +20,9 @@ connectCloudinary();
 
 const allowedOrigins = [
     "https://artnakkk-frontend-admin.vercel.app",
-    "http://localhost:5175",
-    "http://localhost:5176",
+    "http://localhost:5173",
     process.env.FRONTEND_URL,
+    "https://artnakk-backend-10.onrender.com"
 ];
 
 // middlewares
@@ -30,18 +30,31 @@ app.use(express.json());
 // Configure CORS
 app.use(
     cors({
-        origin: (origin, callback) => {
+        origin: function(origin, callback) {
             if (!origin) return callback(null, true);
-            if (allowedOrigins.includes(origin)) {
-                callback(null, true);
-            } else {
-                callback(new Error("Not allowed by CORS"));
+            
+            if (allowedOrigins.indexOf(origin) === -1) {
+                var msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+                return callback(new Error(msg), false);
             }
+            return callback(null, true);
         },
-        methods: ["GET", "POST", "PUT", "DELETE"],
+        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         credentials: true,
+        allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"]
     })
 );
+
+// เพิ่ม OPTIONS handler สำหรับ preflight requests
+app.options('*', cors());
+
+// เพิ่ม middleware สำหรับ set headers
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+    next();
+});
 
 // api endpoints
 app.use("/api/user", userRouter);
