@@ -19,10 +19,9 @@ connectDB();
 connectCloudinary();
 
 const allowedOrigins = [
-    "admin-beta-six-82.vercel.app",
+    "https://admin-beta-six-82.vercel.app",
     "http://localhost:5173",
-    process.env.FRONTEND_URL,
-    "admin-beta-six-82.vercel.app"
+   
 ];
 
 // middlewares
