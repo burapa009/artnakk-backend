@@ -3,11 +3,10 @@ import { loginUser, registerUser, adminLogin } from "../controllers/userControll
 
 const router = express.Router();
 
-// ย้าย admin route ขึ้นมาก่อน route อื่นๆ
-router.post("/admin/login", adminLogin);
-
-// route อื่นๆ คงเดิม
-router.post("/register", registerUser);
+// เพิ่ม route สำหรับ login ทั่วไป
 router.post("/login", loginUser);
+router.post("/auth/login", loginUser);  // เพิ่ม route เดิมเพื่อความเข้ากันได้
+router.post("/admin/login", adminLogin);
+router.post("/register", registerUser);
 
 export default router; 
