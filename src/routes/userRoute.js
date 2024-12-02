@@ -4,11 +4,11 @@ import { loginUser, registerUser, adminLogin } from "../controllers/userControll
 const router = express.Router();
 
 // Admin routes
-router.post("/admin", adminLogin);        // /api/user/admin
-router.post("/admin/login", adminLogin);   // /auth/admin/login
+router.post("/login", adminLogin);         // /auth/login
+router.post("/admin/list", adminLogin);   // /auth/admin/login
 
 // User routes
-router.post("/login", loginUser);         // /api/user/login
-router.post("/register", registerUser);    // /api/user/register
+router.post("/user/login", loginUser);     // /auth/user/login
+router.post("/user/register", registerUser);
 
 export default router; 
