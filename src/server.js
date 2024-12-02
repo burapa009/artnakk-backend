@@ -19,7 +19,7 @@ connectDB();
 connectCloudinary();
 
 const allowedOrigins = [
-    "https://admin-beta-six-82.vercel.app",
+    "admin-ods1wedpb-burapa009s-projects.vercel.app",
     "http://localhost:5173",
     process.env.FRONTEND_URL,
     "https://artnakk-backend-10.onrender.com"
