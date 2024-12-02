@@ -19,7 +19,7 @@ connectDB();
 connectCloudinary();
 
 const allowedOrigins = [
-    "https://artnakkk-frontend-admin.vercel.app",
+    "https://admin-beta-six-82.vercel.app",
     "http://localhost:5173",
     process.env.FRONTEND_URL,
     "https://artnakk-backend-10.onrender.com"
@@ -57,6 +57,7 @@ app.use((req, res, next) => {
 });
 
 // api endpoints
+app.use("/auth", userRouter);
 app.use("/api/user", userRouter);
 app.use("/api/product", productRouter);
 app.use("/api/cart", cartRouter);
