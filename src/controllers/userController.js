@@ -71,18 +71,35 @@ const registerUser = async (req, res) => {
 const adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
+    
     if (
       email === process.env.ADMIN_EMAIL &&
       password === process.env.ADMIN_PASSWORD
     ) {
       const token = jwt.sign(email + password, process.env.JWT_SECRET);
-      res.json({ success: true, token });
+      return res.status(200).json({ 
+        success: true, 
+        token,
+        message: "เข้าสู่ระบบสำเร็จ",
+        redirectTo: "/admin/dashboard",
+        isAdmin: true,
+        user: {
+          email: process.env.ADMIN_EMAIL,
+          role: "admin"
+        }
+      });
     } else {
-      res.json({ success: false, message: "Invalid credentials" });
+      return res.status(401).json({ 
+        success: false, 
+        message: "อีเมลหรือรหัสผ่านไม่ถูกต้อง" 
+      });
     }
   } catch (error) {
-    console.log(error);
-    res.json({ success: false, message: error.message });
+    console.error("Admin login error:", error);
+    return res.status(500).json({ 
+      success: false, 
+      message: "เกิดข้อผิดพลาดในการเข้าสู่ระบบ" 
+    });
   }
 };
 export { loginUser, registerUser, adminLogin };
