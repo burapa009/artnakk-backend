@@ -4,11 +4,11 @@ import { loginUser, registerUser, adminLogin } from "../controllers/userControll
 const router = express.Router();
 
 // Admin routes
-router.post("/login", adminLogin);         // /auth/login
-router.post("/admin/list", adminLogin);   // /auth/admin/login
+router.post("/admin/login", adminLogin);    // เปลี่ยนเป็น /api/admin/login
+router.post("/admin/list", adminLogin);     // route สำหรับดูรายการ
 
 // User routes
-router.post("/user/login", loginUser);     // /auth/user/login
-router.post("/user/register", registerUser);
+router.post("/login", loginUser);           // /api/user/login
+router.post("/register", registerUser);     // /api/user/register
 
 export default router; 
