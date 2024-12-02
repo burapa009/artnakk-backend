@@ -72,23 +72,45 @@ const adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
     
+    console.log("Admin login attempt:", { email, password });
+    
+    if (!process.env.ADMIN_EMAIL || !process.env.ADMIN_PASSWORD) {
+      console.error("Missing admin credentials in env");
+      return res.status(500).json({
+        success: false,
+        message: "ไม่พบข้อมูล Admin"
+      });
+    }
+
     if (
       email === process.env.ADMIN_EMAIL &&
       password === process.env.ADMIN_PASSWORD
     ) {
-      const token = jwt.sign(email + password, process.env.JWT_SECRET);
+      const token = jwt.sign(
+        { 
+          email, 
+          role: 'admin' 
+        }, 
+        process.env.JWT_SECRET,
+        { expiresIn: '1d' }
+      );
+
       return res.status(200).json({ 
         success: true, 
         token,
         message: "เข้าสู่ระบบสำเร็จ",
-        redirectTo: "/admin/dashboard",
-        isAdmin: true,
         user: {
           email: process.env.ADMIN_EMAIL,
           role: "admin"
         }
       });
     } else {
+      console.log("Invalid credentials:", {
+        expectedEmail: process.env.ADMIN_EMAIL,
+        receivedEmail: email,
+        passwordMatch: password === process.env.ADMIN_PASSWORD
+      });
+
       return res.status(401).json({ 
         success: false, 
         message: "อีเมลหรือรหัสผ่านไม่ถูกต้อง" 

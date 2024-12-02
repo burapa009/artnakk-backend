@@ -3,9 +3,12 @@ import { loginUser, registerUser, adminLogin } from "../controllers/userControll
 
 const router = express.Router();
 
-// แก้ไข route ให้ตรงกับที่ frontend เรียก
-router.post("/login", adminLogin);           // route สำหรับ admin login
-router.post("/user/login", loginUser);       // route สำหรับ user login
-router.post("/user/register", registerUser); // route สำหรับ register
+// Admin routes
+router.post("/login", adminLogin);         // /auth/login
+router.post("/admin/login", adminLogin);   // /auth/admin/login
+
+// User routes
+router.post("/user/login", loginUser);     // /auth/user/login
+router.post("/user/register", registerUser);
 
 export default router; 
