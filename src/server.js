@@ -56,8 +56,7 @@ app.use((req, res, next) => {
 });
 
 // api endpoints
-app.use("/auth", userRouter);
-app.use("/api", userRouter);
+app.use("/api/user", userRouter);
 app.use("/api/product", productRouter);
 app.use("/api/cart", cartRouter);
 app.use("/api/order", orderRouter);
